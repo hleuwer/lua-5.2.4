@@ -28,7 +28,9 @@ MYOBJS=
 
 PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
 
-LUA_A=	liblua.a
+LUA_A=	liblua52.a
+LUA_D=  lua52.dll
+LUA_L=  lua52.lib
 CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
 	lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o \
 	ltm.o lundump.o lvm.o lzio.o
@@ -66,7 +68,10 @@ $(LUAC_T): $(LUAC_O) $(LUA_A)
 	$(CC) -o $@ $(LDFLAGS) $(LUAC_O) $(LUA_A) $(LIBS)
 
 clean:
-	$(RM) $(ALL_T) $(ALL_O)
+	$(RM) $(ALL_T) $(ALL_O) 
+
+mclean: clean
+	$(RM) $(LUA_T).exe $(LUAC_T).exe $(LUA_A) $(LUA_D) $(LUA_L)
 
 depend:
 	@$(CC) $(CFLAGS) -MM l*.c
@@ -108,9 +113,10 @@ linux:
 macosx:
 	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_MACOSX" SYSLIBS="-lreadline" CC=cc
 
+# "RANLIB=strip --strip-unneeded" 
 mingw:
-	$(MAKE) "LUA_A=lua52.dll" "LUA_T=lua.exe" \
-	"AR=$(CC) -shared -o" "RANLIB=strip --strip-unneeded" \
+	$(MAKE) "LUA_A=$(LUA_D)" "LUA_T=lua.exe" \
+	"AR=$(CC) -shared -Wl,--out-implib,$(LUA_L) -o" "RANLIB=strip --strip-unneeded" \
 	"SYSCFLAGS=-DLUA_BUILD_AS_DLL" "SYSLIBS=" "SYSLDFLAGS=-s" lua.exe
 	$(MAKE) "LUAC_T=luac.exe" luac.exe
 
