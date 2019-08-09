@@ -2,6 +2,7 @@
 # See ../doc/readme.html for installation and customization instructions.
 
 # == CHANGE THE SETTINGS BELOW TO SUIT YOUR ENVIRONMENT =======================
+SYSTEM = $(shell uname -o)
 
 # Your platform. See PLATS for possible values.
 PLAT= mingw
@@ -19,8 +20,13 @@ SYSCFLAGS=
 SYSLDFLAGS=
 SYSLIBS=
 
-MYCFLAGS=-mwin32 -I/mingw32/include
+ifneq ($(SYSTEM), "Msys")
+MYCFLAGS=-mwin32 -I/mingw64/include
 MYLDFLAGS=-mwin32
+else
+MYCFLAGS=
+MYLDFLAGS=
+endif
 MYLIBS=
 MYOBJS=
 
