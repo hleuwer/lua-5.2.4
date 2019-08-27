@@ -44,11 +44,19 @@ RM= rm -f
 PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
 
 # What to install.
+
+ifneq ($(SYSTEM), "Msys")
 TO_BIN= lua luac lua52.dll
 TO_INC= lua.h luaconf.h lualib.h lauxlib.h lua.hpp
 TO_LIB= liblua52.a lua52.lib liblua52.dll.a
+TO_BIN_WRAP1=lua5.2
+TO_BIN_WRAP2=lua
+else
+TO_BIN= lua luac
+TO_INC= lua.h luaconf.h lualib.h lauxlib.h lua.hpp
+TO_LIB= liblua.a
+endif
 TO_MAN= lua.1 luac.1
-
 # Lua version and release.
 V= 5.2
 R= $V.4
@@ -64,6 +72,10 @@ test:	dummy
 
 install: dummy
 	cd src && $(MKDIR) $(INSTALL_BIN) $(INSTALL_INC) $(INSTALL_LIB) $(INSTALL_MAN) $(INSTALL_LMOD) $(INSTALL_CMOD)
+ifneq ($(SYSTEM), "Msys")
+	$(INSTALL_EXEC) $(TO_BIN_WRAP1) $(INSTALL_BIN)
+	$(INSTALL_EXEC) $(TO_BIN_WRAP2) $(INSTALL_BIN)
+endif
 	cd src && $(INSTALL_EXEC) $(TO_BIN) $(INSTALL_BIN)
 	cd src && $(INSTALL_DATA) $(TO_INC) $(INSTALL_INC)
 	cd src && $(INSTALL_DATA) $(TO_LIB) $(INSTALL_LIB)
@@ -74,6 +86,9 @@ uninstall:
 	cd src && cd $(INSTALL_INC) && $(RM) $(TO_INC)
 	cd src && cd $(INSTALL_LIB) && $(RM) $(TO_LIB)
 	cd doc && cd $(INSTALL_MAN) && $(RM) $(TO_MAN)
+ifneq ($(SYSTEM), "Msys")
+	cd $(INSTALL_BIN) && $(RM) $(TO_BIN_WRAP1) $(T_BIN_WRAP2)
+endif
 
 local:
 	$(MAKE) install INSTALL_TOP=../install
