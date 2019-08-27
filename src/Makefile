@@ -31,6 +31,7 @@ PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
 LUA_A=	liblua52.a
 LUA_D=  lua52.dll
 LUA_L=  lua52.lib
+LUA_L_MINGW = liblua52.dll.a
 CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
 	lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o \
 	ltm.o lundump.o lvm.o lzio.o
@@ -71,7 +72,7 @@ clean:
 	$(RM) $(ALL_T) $(ALL_O) 
 
 mclean: clean
-	$(RM) $(LUA_T).exe $(LUAC_T).exe $(LUA_A) $(LUA_D) $(LUA_L)
+	$(RM) $(LUA_T).exe $(LUAC_T).exe $(LUA_A) $(LUA_D) $(LUA_L) $(LUA_L_MINGW)
 
 depend:
 	@$(CC) $(CFLAGS) -MM l*.c
@@ -118,6 +119,7 @@ mingw:
 	$(MAKE) "LUA_A=$(LUA_D)" "LUA_T=lua.exe" \
 	"AR=$(CC) -shared -Wl,--out-implib,$(LUA_L) -o" "RANLIB=strip --strip-unneeded" \
 	"SYSCFLAGS=-DLUA_BUILD_AS_DLL" "SYSLIBS=" "SYSLDFLAGS=-s" lua.exe
+	cp $(LUA_L) $(LUA_L_MINGW)
 	$(MAKE) "LUAC_T=luac.exe" luac.exe
 
 posix:

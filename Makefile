@@ -46,7 +46,7 @@ PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
 # What to install.
 TO_BIN= lua luac lua52.dll
 TO_INC= lua.h luaconf.h lualib.h lauxlib.h lua.hpp
-TO_LIB= liblua52.a lua52.lib
+TO_LIB= liblua52.a lua52.lib liblua52.dll.a
 TO_MAN= lua.1 luac.1
 
 # Lua version and release.
